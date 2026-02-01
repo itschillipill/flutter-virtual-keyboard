@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../virtual_keyboard.dart';
@@ -88,7 +87,7 @@ class _KeyboardKeyState extends State<KeyboardKey> {
   OverlayEntry? _overlayEntry;
 
   void _showAdditionalKeys(BuildContext context, Offset position) {
-   // TODO: itschillipill/ show additional keys
+    // TODO: itschillipill/ show additional keys
   }
 
   void _removeOverlay() {

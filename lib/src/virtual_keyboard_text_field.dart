@@ -9,7 +9,7 @@ import 'virtual_keyboard_scope.dart';
 
 class VirtualKeyboardTextField extends StatefulWidget {
   VirtualKeyboardTextField({
-    super.key,
+    this.key,
     this.groupId = EditableText,
     this.keyboardOptions = VirtualKeyboardOptions.def,
     this.undoController,
@@ -76,7 +76,7 @@ class VirtualKeyboardTextField extends StatefulWidget {
           !(keyboardOptions.action == KeyboardAction.newLine && maxLines == 1),
           "VirtualKeyboardTextField: must be maxLines > 1 when action == KeyboardAction.newLine",
         );
-
+  final GlobalKey<EditableTextState>? key;
   final TextEditingController controller;
   final VirtualKeyboardOptions keyboardOptions;
   final InputDecoration decoration;
@@ -131,7 +131,7 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     implements TextSelectionGestureDetectorBuilderDelegate {
   late final FocusNode _focusNode;
   late ScrollController _scrollController;
-  final GlobalKey<EditableTextState> _key = GlobalKey<EditableTextState>();
+  late final GlobalKey<EditableTextState> _key;
   late _TextFieldSelectionGestureDetectorBuilder
       _selectionGestureDetectorBuilder;
 
@@ -143,13 +143,13 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     _scrollController = widget.scrollController ?? ScrollController();
     _selectionGestureDetectorBuilder =
         _TextFieldSelectionGestureDetectorBuilder(state: this);
+    _key = widget.key ?? GlobalKey<EditableTextState>();
   }
 
   void _handleFocus() {
     if (widget.readOnly) return;
 
     final vk = VirtualKeyboardScope.of(context);
-
     if (_focusNode.hasFocus) {
       vk.attach(
         widget.controller,

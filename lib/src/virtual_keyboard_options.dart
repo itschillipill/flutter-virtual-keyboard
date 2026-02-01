@@ -42,16 +42,24 @@ class VirtualKeyboardOptions {
       suggestionBuilder: suggestionBuilder ?? this.suggestionBuilder,
     );
   }
-  
+
   bool get hasSuggestions => suggestionBuilder != null;
   bool get isNumeric => type == VirtualKeyboardType.numeric;
 }
 
-enum VirtualKeyboardType {
-  alphabetic,
-  numeric,
-  phone,
-  email
+enum VirtualKeyboardType { alphabetic, numeric, phone, email }
+
+extension KeyboardHeightX on VirtualKeyboardType {
+  double get height {
+    switch (this) {
+      case VirtualKeyboardType.alphabetic:
+        return 280;
+      case VirtualKeyboardType.numeric:
+        return 210;
+      case _:
+        return 50;
+    }
+  }
 }
 
 enum KeyboardAction {

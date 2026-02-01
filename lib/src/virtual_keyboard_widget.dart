@@ -58,9 +58,11 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
             options: _options,
           ),
         _ => const Center(
-            child: Text("not implemented yet"),
+            child: Material(
+              child: Text("not implemented yet"),
+            ),
           )
       },
     );
- }
+  }
 }

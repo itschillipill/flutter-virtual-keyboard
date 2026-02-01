@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'virtual_keyboard_options.dart';
 
-class VirtualKeyboardController extends ChangeNotifier {
+final class VirtualKeyboardController extends ChangeNotifier {
   TextEditingController? _active;
   ScrollController? _scrollController;
   FocusNode? activeFocus;
@@ -12,9 +12,16 @@ class VirtualKeyboardController extends ChangeNotifier {
   void Function(String value)? _onSubmitted;
   GlobalKey<EditableTextState>? _aciveKey;
 
+  static const double SUGGESTION_ROW_HIEGHT = 50;
+
   TextEditingValue get value => _value;
   VirtualKeyboardOptions get options => _currentOptions;
 
+  double get keyboardHeight =>
+      _currentOptions.type.height +
+      (_currentOptions.hasSuggestions ? SUGGESTION_ROW_HIEGHT : 0);
+
+  // === Attach ===
   void attach(
     TextEditingController controller,
     FocusNode focusNode,

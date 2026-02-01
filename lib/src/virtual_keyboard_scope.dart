@@ -56,7 +56,7 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
       builder: (_, __) {
         final isOpen = _controller.isOpen;
         // ignore: prefer_const_declarations
-        double keyboardHeight = 300;
+        double keyboardHeight = _controller.keyboardHeight;
         // ignore: deprecated_member_use
         return PopScope(
           canPop: !_controller.isOpen,
