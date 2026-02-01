@@ -1,4 +1,4 @@
-name: flutter_vitual_keyboard
+name: flutter_virtual_keyboard
 description: A flutter virtual keyboard plugin
 version: 0.0.1-dev
 publish_to: none
@@ -9,7 +9,7 @@ license: MIT
 
 topics: 
   - keyboard
-  - vitual keyboard
+  - virtual-keyboard
   - cross-platform
   - flutter
 
