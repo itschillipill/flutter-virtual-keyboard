@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_virtual_keyboard/src/virtual_keyboard_theme.dart';
 
 import '../keyboard_language.dart';
 import '../virtual_keyboard_controller.dart';
@@ -48,6 +49,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   }
 
   static const String _getNumberRow = "1234567890";
+  
   List<String> _getLayoutRows() {
     if (_isUppercase) {
       return _currentLanguage.characters.map((e) => e.toUpperCase()).toList();
@@ -79,13 +81,13 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = VirtualKeyboardTheme.of(context);
     final rows = _getLayoutRows();
     return LayoutBuilder(
       builder: (context, constraints) {
         return Material(
-          color: colorScheme.surface,
+          color: theme.backgroundColor,
+          borderRadius: theme.borderRadius,
           elevation: 4,
           child: Column(
             mainAxisSize: MainAxisSize.min,

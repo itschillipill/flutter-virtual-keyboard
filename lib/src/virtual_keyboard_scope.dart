@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_virtual_keyboard/src/virtual_keyboard_theme.dart';
 
 import '../flutter_virtual_keyboard.dart' show VirtualKeyboardTextFieldState;
 import 'virtual_keyboard_controller.dart';
@@ -10,16 +10,16 @@ import 'virtual_keyboard_widget.dart';
 /// {@endtemplate}
 class VirtualKeyboardScope extends StatefulWidget {
   /// {@macro vk_scope}
-  const VirtualKeyboardScope({super.key, required this.child});
+  const VirtualKeyboardScope({super.key, required this.child, this.themeData});
 
   final Widget child;
+  final VirtualKeyboardThemeData? themeData;
 
   static VirtualKeyboardController of(BuildContext context) {
     final scope = context.findAncestorStateOfType<_VirtualKeyboardScopeState>();
     assert(scope != null, 'VirtualKeyboardScope not found');
     return scope!._controller;
   }
-
   @override
   State<VirtualKeyboardScope> createState() => _VirtualKeyboardScopeState();
 }
@@ -28,6 +28,20 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
   final VirtualKeyboardController _controller = VirtualKeyboardController();
   final _keyboardKey =
       GlobalKey<State<VirtualKeyboardWidget>>(debugLabel: "virtualKeyboard");
+VirtualKeyboardThemeData _defaultThemeData = VirtualKeyboardThemeData(
+    keyTheme: KeyboardButtonTheme(
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      textStyle: const TextStyle(color: Colors.black),
+      borderRadius: BorderRadius.circular(8),
+      padding: const EdgeInsets.all(8),
+      border: Border.all(color: Colors.black),
+    ),
+    backgroundColor: Colors.white,
+    border: Border.all(color: Colors.black),
+    borderRadius: BorderRadius.circular(8),
+    padding: const EdgeInsets.all(8),
+  );
 
   bool _isPointerOnActiveField(
       Offset globalPosition, GlobalKey<VirtualKeyboardTextFieldState>? key) {
@@ -91,14 +105,17 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
                     widget.child,
                     AnimatedPositioned(
                       duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOut,
+                      curve: Curves.fastEaseInToSlowEaseOut,
                       left: 0,
                       right: 0,
-                      bottom: isOpen ? 0 : -keyboardHeight,
-                      child: VirtualKeyboardWidget(
-                        key: _keyboardKey,
-                        controller: _controller,
-                        virtualKeyboardHeight: keyboardHeight,
+                      bottom: isOpen ? 0 : - keyboardHeight*2,
+                      child: VirtualKeyboardTheme(
+                        data: widget.themeData ?? _defaultThemeData,
+                        child: VirtualKeyboardWidget(
+                          key: _keyboardKey,
+                          controller: _controller,
+                          virtualKeyboardHeight: keyboardHeight,
+                        ),
                       ),
                     )
                   ],

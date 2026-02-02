@@ -97,10 +97,9 @@ class _KeyboardKeyState extends State<KeyboardKey> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
+    final theme = VirtualKeyboardTheme.of(context).keyTheme;
     return Padding(
-      padding: const EdgeInsets.all(2),
+      padding: theme.padding,
       child: GestureDetector(
         onTap: widget.onTap,
         onLongPressStart: (details) {
@@ -110,18 +109,15 @@ class _KeyboardKeyState extends State<KeyboardKey> {
         },
         onLongPressEnd: (_) => _removeOverlay(),
         child: Material(
-          color: widget.active
-              ? theme.colorScheme.primaryContainer
-              : theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(8),
-          child: InkWell(
-            child: SizedBox(
-              height: 48,
-              child: Center(
-                child: widget.icon != null
-                    ? Icon(widget.icon)
-                    : Text(widget.label!, style: theme.textTheme.titleMedium),
-              ),
+          color:theme.backgroundColor,
+          borderRadius: theme.borderRadius,
+          elevation: widget.active ? 4 : 0,
+          child: SizedBox(
+            height: 48,
+            child: Center(
+              child: widget.icon != null
+                  ? Icon(widget.icon, color: theme.foregroundColor,)
+                  : Text(widget.label!, style: theme.textStyle),
             ),
           ),
         ),

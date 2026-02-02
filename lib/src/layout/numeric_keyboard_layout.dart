@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_virtual_keyboard/src/virtual_keyboard_theme.dart';
 
 import '../virtual_keyboard_controller.dart';
 import '../virtual_keyboard_options.dart';
@@ -21,24 +22,23 @@ class NumericKeyboardLayout extends StatefulWidget {
 class _NumericKeyboardLayoutState extends State<NumericKeyboardLayout> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final theme = VirtualKeyboardTheme.of(context);
 
-    // layout как просили
     final rows = [
       ['1', '2', '3', '-'],
       ['4', '5', '6', 'space'],
       ['7', '8', '9', 'backspace'],
       [
-        ',', // запятая
+        ',',
         '0+',
-        '.', // точка
+        '.',
         'action',
       ],
     ];
 
     return Material(
-      color: colorScheme.surface,
+      color: theme.backgroundColor,
+      borderRadius: theme.borderRadius,
       elevation: 4,
       child: Column(
         mainAxisSize: MainAxisSize.min,
