@@ -1,4 +1,4 @@
-library;
+library flutter_virtual_keyboard;
 
 export 'src/virtual_keyboard_scope.dart';
 export 'src/virtual_keyboard_text_field.dart';

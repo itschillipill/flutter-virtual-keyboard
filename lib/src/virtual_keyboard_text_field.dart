@@ -75,8 +75,12 @@ class VirtualKeyboardTextField extends StatefulWidget {
         assert(
           !(keyboardOptions.action == KeyboardAction.newLine && maxLines == 1),
           "VirtualKeyboardTextField: must be maxLines > 1 when action == KeyboardAction.newLine",
-        );
-  final GlobalKey<EditableTextState>? key;
+        ),
+        assert(
+            !keyboardOptions.additionalLanguages
+                .contains(keyboardOptions.initialLanguage),
+            "Initional language must not be in additional languages");
+  final GlobalKey<VirtualKeyboardTextFieldState>? key;
   final TextEditingController controller;
   final VirtualKeyboardOptions keyboardOptions;
   final InputDecoration decoration;
@@ -124,14 +128,16 @@ class VirtualKeyboardTextField extends StatefulWidget {
 
   @override
   State<VirtualKeyboardTextField> createState() =>
-      _VirtualKeyboardTextFieldState();
+      VirtualKeyboardTextFieldState();
 }
 
-class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
+class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     implements TextSelectionGestureDetectorBuilderDelegate {
   late final FocusNode _focusNode;
   late ScrollController _scrollController;
-  late final GlobalKey<EditableTextState> _key;
+  final GlobalKey<EditableTextState> _editableKey =
+      GlobalKey<EditableTextState>();
+  late final GlobalKey<VirtualKeyboardTextFieldState> _key;
   late _TextFieldSelectionGestureDetectorBuilder
       _selectionGestureDetectorBuilder;
 
@@ -143,7 +149,7 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     _scrollController = widget.scrollController ?? ScrollController();
     _selectionGestureDetectorBuilder =
         _TextFieldSelectionGestureDetectorBuilder(state: this);
-    _key = widget.key ?? GlobalKey<EditableTextState>();
+    _key = widget.key ?? GlobalKey<VirtualKeyboardTextFieldState>();
   }
 
   void _handleFocus() {
@@ -155,12 +161,21 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
         widget.controller,
         _focusNode,
         widget.keyboardOptions,
+        _editableKey,
         _key,
         scrollController: _scrollController,
         onSubmitted: widget.onSubmitted,
       );
     }
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_handleFocus);
+    _focusNode.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   bool get isEditing =>
@@ -171,12 +186,13 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     final theme = Theme.of(context);
 
     return InputDecorator(
+      key: _key,
       decoration: widget.decoration,
       isFocused: _focusNode.hasFocus,
       isEmpty: widget.controller.text.isEmpty,
       child: _selectionGestureDetectorBuilder.buildGestureDetector(
         child: EditableText(
-          key: _key,
+          key: _editableKey,
           restorationId: widget.restorationId,
           groupId: widget.groupId,
           undoController: widget.undoController,
@@ -246,7 +262,7 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
   }
 
   @override
-  GlobalKey<EditableTextState> get editableTextKey => _key;
+  GlobalKey<EditableTextState> get editableTextKey => _editableKey;
 
   @override
   bool get forcePressEnabled => true;
@@ -258,11 +274,11 @@ class _VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
 class _TextFieldSelectionGestureDetectorBuilder
     extends TextSelectionGestureDetectorBuilder {
   _TextFieldSelectionGestureDetectorBuilder(
-      {required _VirtualKeyboardTextFieldState state})
+      {required VirtualKeyboardTextFieldState state})
       : _state = state,
         super(delegate: state);
 
-  final _VirtualKeyboardTextFieldState _state;
+  final VirtualKeyboardTextFieldState _state;
 
   @override
   bool get onUserTapAlwaysCalled => _state.widget.onTapAlwaysCalled;

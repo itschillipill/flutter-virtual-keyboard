@@ -22,7 +22,7 @@ class AlphabeticKeyboardLayout extends StatefulWidget {
 
 class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   late KeyboardLanguage _currentLanguage;
-  // ignore: unused_field TODO: itschillipill/ implement suggestions
+  // ignore: unused_field
   List<String>? _suggestions;
 
   bool _isUppercase = false;
@@ -90,6 +90,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // TODO: itschillipill/ implement suggestions
               KeyboardRow(
                 children: _getNumberRow
                     .split('')
@@ -127,9 +128,14 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
               KeyboardRow(
                 children: [
                   KeyboardKey.buildIconKey(
-                    icon: Icons.language,
-                    onTap: _toggleLanguage,
+                    icon: Icons.emoji_emotions_rounded,
+                    onTap: () {},
                   ),
+                  if (widget.options.additionalLanguages.isNotEmpty)
+                    KeyboardKey.buildIconKey(
+                      icon: Icons.language,
+                      onTap: _toggleLanguage,
+                    ),
                   KeyboardKey.buildSpaceKey(widget.controller),
                   KeyboardKey.buildActionKey(
                       widget.controller, widget.options.action),

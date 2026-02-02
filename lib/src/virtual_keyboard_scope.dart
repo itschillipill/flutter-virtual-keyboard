@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../flutter_virtual_keyboard.dart' show VirtualKeyboardTextFieldState;
 import 'virtual_keyboard_controller.dart';
 import 'virtual_keyboard_widget.dart';
 
@@ -28,15 +29,16 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
   final _keyboardKey =
       GlobalKey<State<VirtualKeyboardWidget>>(debugLabel: "virtualKeyboard");
 
-  bool _isPointerOnCurrentTextField(
-      Offset globalPosition, FocusNode activeFocus) {
-    if (_keyboardKey.currentContext == null || activeFocus.context == null) {
-      return false;
-    }
-    final renderBox = activeFocus.context!.findRenderObject() as RenderBox;
-    final textField = renderBox.localToGlobal(Offset.zero) & renderBox.size;
+  bool _isPointerOnActiveField(
+      Offset globalPosition, GlobalKey<VirtualKeyboardTextFieldState>? key) {
+    if (key?.currentContext == null) return false;
 
-    return textField.contains(globalPosition);
+    final renderBox = key!.currentContext?.findRenderObject();
+    if (renderBox case RenderBox r) {
+      final textField = r.localToGlobal(Offset.zero) & r.size;
+      return textField.contains(globalPosition);
+    }
+    return false;
   }
 
   bool _isPointerOnKeyboard(Offset globalPosition) {
@@ -55,9 +57,7 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
       animation: _controller,
       builder: (_, __) {
         final isOpen = _controller.isOpen;
-        // ignore: prefer_const_declarations
         double keyboardHeight = _controller.keyboardHeight;
-        // ignore: deprecated_member_use
         return PopScope(
           canPop: !_controller.isOpen,
           onPopInvokedWithResult: (didPop, result) {
@@ -76,11 +76,11 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
               ),
               child: Listener(
                 behavior: HitTestBehavior.translucent,
-                onPointerDown: (event) {
+                onPointerUp: (event) {
                   if (_controller.activeFocus != null) {
                     final isOnKeyboard = _isPointerOnKeyboard(event.position) ||
-                        _isPointerOnCurrentTextField(
-                            event.position, _controller.activeFocus!);
+                        _isPointerOnActiveField(
+                            event.position, _controller.textFieldKey);
                     if (!isOnKeyboard) {
                       _controller.hide(unfocusField: true);
                     }

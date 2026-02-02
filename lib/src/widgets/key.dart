@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../virtual_keyboard.dart';
+import '../../flutter_virtual_keyboard.dart';
 import '../virtual_keyboard_controller.dart';
 
 class KeyboardRow extends StatelessWidget {
