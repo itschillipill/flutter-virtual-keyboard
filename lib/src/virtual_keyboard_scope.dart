@@ -59,9 +59,9 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
         final isOpen = _controller.isOpen;
         double keyboardHeight = _controller.keyboardHeight;
         return PopScope(
-          canPop: !_controller.isOpen,
+          canPop: !isOpen,
           onPopInvokedWithResult: (didPop, result) {
-            if (!didPop && _controller.isOpen) {
+            if (!didPop && isOpen) {
               _controller.hide();
             }
           },

@@ -5,21 +5,19 @@ import 'virtual_keyboard_text_field.dart' show VirtualKeyboardTextFieldState;
 
 final class VirtualKeyboardController extends ChangeNotifier {
   TextEditingController? _active;
-  ScrollController? _scrollController;
   FocusNode? activeFocus;
   VirtualKeyboardOptions _currentOptions = VirtualKeyboardOptions.def;
   TextEditingValue _value = TextEditingValue.empty;
   VoidCallback? _textListener;
   void Function(String value)? _onSubmitted;
-  GlobalKey<VirtualKeyboardTextFieldState>? _aciveTextFieldKey;
-  GlobalKey<EditableTextState>? _editableTextKey;
+  VirtualKeyboardTextFieldState? _aciveState;
 
   static const double SUGGESTION_ROW_HIEGHT = 50;
 
   TextEditingValue get value => _value;
   VirtualKeyboardOptions get options => _currentOptions;
   GlobalKey<VirtualKeyboardTextFieldState>? get textFieldKey =>
-      _aciveTextFieldKey;
+      _aciveState?.key;
 
   double get keyboardHeight =>
       _currentOptions.type.height +
@@ -30,18 +28,14 @@ final class VirtualKeyboardController extends ChangeNotifier {
     TextEditingController controller,
     FocusNode focusNode,
     VirtualKeyboardOptions options,
-    GlobalKey<EditableTextState> editableKey,
-    GlobalKey<VirtualKeyboardTextFieldState> key, {
-    ScrollController? scrollController,
+    VirtualKeyboardTextFieldState state, {
     void Function(String value)? onSubmitted,
   }) {
     if (_active == controller &&
         activeFocus == focusNode &&
         _currentOptions == options &&
-        _scrollController == scrollController &&
         _onSubmitted == onSubmitted &&
-        _aciveTextFieldKey == key &&
-        _editableTextKey == editableKey) {
+        _aciveState == state) {
       return;
     }
     _active?.removeListener(_textListener ?? () {});
@@ -49,10 +43,8 @@ final class VirtualKeyboardController extends ChangeNotifier {
     _active = controller;
     activeFocus = focusNode;
     _currentOptions = options;
-    _scrollController = scrollController;
     _onSubmitted = onSubmitted;
-    _aciveTextFieldKey = key;
-    _editableTextKey = editableKey;
+    _aciveState = state;
 
     _textListener = () {
       _value = controller.value;
@@ -71,10 +63,8 @@ final class VirtualKeyboardController extends ChangeNotifier {
     _active = null;
     activeFocus = null;
     _currentOptions = VirtualKeyboardOptions.def;
-    _scrollController = null;
     _onSubmitted = null;
-    _aciveTextFieldKey = null;
-    _editableTextKey = null;
+    _aciveState = null;
     _value = TextEditingValue.empty;
     notifyListeners();
   }
@@ -145,7 +135,7 @@ final class VirtualKeyboardController extends ChangeNotifier {
   }
 
   void _scrollToCaret() {
-    final key = _editableTextKey;
+    final key = _aciveState?.editableTextKey;
     if (key == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

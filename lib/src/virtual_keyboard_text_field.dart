@@ -134,10 +134,10 @@ class VirtualKeyboardTextField extends StatefulWidget {
 class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     implements TextSelectionGestureDetectorBuilderDelegate {
   late final FocusNode _focusNode;
-  late ScrollController _scrollController;
+  late ScrollController scrollController;
   final GlobalKey<EditableTextState> _editableKey =
       GlobalKey<EditableTextState>();
-  late final GlobalKey<VirtualKeyboardTextFieldState> _key;
+  late final GlobalKey<VirtualKeyboardTextFieldState> key;
   late _TextFieldSelectionGestureDetectorBuilder
       _selectionGestureDetectorBuilder;
 
@@ -146,10 +146,10 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_handleFocus);
-    _scrollController = widget.scrollController ?? ScrollController();
+    scrollController = widget.scrollController ?? ScrollController();
     _selectionGestureDetectorBuilder =
         _TextFieldSelectionGestureDetectorBuilder(state: this);
-    _key = widget.key ?? GlobalKey<VirtualKeyboardTextFieldState>();
+    key = widget.key ?? GlobalKey<VirtualKeyboardTextFieldState>();
   }
 
   void _handleFocus() {
@@ -161,9 +161,7 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
         widget.controller,
         _focusNode,
         widget.keyboardOptions,
-        _editableKey,
-        _key,
-        scrollController: _scrollController,
+        this,
         onSubmitted: widget.onSubmitted,
       );
     }
@@ -174,7 +172,7 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
   void dispose() {
     _focusNode.removeListener(_handleFocus);
     _focusNode.dispose();
-    _scrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -186,7 +184,7 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
     final theme = Theme.of(context);
 
     return InputDecorator(
-      key: _key,
+      key: key,
       decoration: widget.decoration,
       isFocused: _focusNode.hasFocus,
       isEmpty: widget.controller.text.isEmpty,
@@ -226,7 +224,7 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
           maxLines: widget.maxLines,
           minLines: widget.minLines,
           expands: widget.expands,
-          scrollController: _scrollController,
+          scrollController: scrollController,
           scrollPhysics: widget.scrollPhysics ?? const ClampingScrollPhysics(),
           scrollPadding: widget.scrollPadding,
           onChanged: widget.onChanged,
