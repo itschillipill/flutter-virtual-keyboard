@@ -20,6 +20,7 @@ class VirtualKeyboardScope extends StatefulWidget {
     assert(scope != null, 'VirtualKeyboardScope not found');
     return scope!._controller;
   }
+
   @override
   State<VirtualKeyboardScope> createState() => _VirtualKeyboardScopeState();
 }
@@ -28,7 +29,7 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
   final VirtualKeyboardController _controller = VirtualKeyboardController();
   final _keyboardKey =
       GlobalKey<State<VirtualKeyboardWidget>>(debugLabel: "virtualKeyboard");
-VirtualKeyboardThemeData _defaultThemeData = VirtualKeyboardThemeData(
+  VirtualKeyboardThemeData _defaultThemeData = VirtualKeyboardThemeData(
     keyTheme: KeyboardButtonTheme(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
@@ -108,7 +109,7 @@ VirtualKeyboardThemeData _defaultThemeData = VirtualKeyboardThemeData(
                       curve: Curves.fastEaseInToSlowEaseOut,
                       left: 0,
                       right: 0,
-                      bottom: isOpen ? 0 : - keyboardHeight*2,
+                      bottom: isOpen ? 0 : -keyboardHeight * 2,
                       child: VirtualKeyboardTheme(
                         data: widget.themeData ?? _defaultThemeData,
                         child: VirtualKeyboardWidget(

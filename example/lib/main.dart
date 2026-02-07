@@ -26,21 +26,26 @@ class MyApp extends StatelessWidget {
       themeMode: !themeController.isDark ? ThemeMode.dark : ThemeMode.light,
       home: const KeyboardTestPage(),
       builder: (context, child) => VirtualKeyboardScope(
-         themeData: VirtualKeyboardThemeData(
-          keyTheme: KeyboardButtonTheme(
-            backgroundColor: themeController.isDark ? Colors.grey.shade900 : Colors.white,
-            foregroundColor: themeController.isDark ? Colors.grey.shade200 : Colors.grey.shade800,
-            textStyle: TextStyle(color: themeController.isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
-            borderRadius: BorderRadius.circular(8),
-            padding: const EdgeInsets.all(2),
+        themeData: VirtualKeyboardThemeData(
+            keyTheme: KeyboardButtonTheme(
+              backgroundColor:
+                  themeController.isDark ? Colors.grey.shade900 : Colors.white,
+              foregroundColor: themeController.isDark
+                  ? Colors.grey.shade200
+                  : Colors.grey.shade800,
+              textStyle: TextStyle(
+                  color: themeController.isDark ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold),
+              borderRadius: BorderRadius.circular(8),
+              padding: const EdgeInsets.all(2),
+              border: const Border(),
+            ),
+            backgroundColor: Colors.redAccent.shade700,
             border: const Border(),
-          ),
-          backgroundColor: Colors.redAccent.shade700,
-          border: const Border(),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-          padding: const EdgeInsets.all(4)
-         ),
-        child: child!,),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+            padding: const EdgeInsets.all(4)),
+        child: child!,
+      ),
     );
   }
 }
@@ -64,37 +69,38 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
 
   List<VirtualKeyboardOptions> getOptions() {
     return const [
-       VirtualKeyboardOptions(
-          initialLanguage: KeyboardLanguage.ru,
-          additionalLanguages: [KeyboardLanguage.en],
-          type: VirtualKeyboardType.alphabetic,
-          action: KeyboardAction.newLine,
-        ), 
-         VirtualKeyboardOptions(
-          initialLanguage: KeyboardLanguage.ru,
-          additionalLanguages: [KeyboardLanguage.en],
-          type: VirtualKeyboardType.alphabetic,
-          action: KeyboardAction.done,
-        ), 
-         VirtualKeyboardOptions(
-          initialLanguage: KeyboardLanguage.ru,
-          type: VirtualKeyboardType.alphabetic,
-          action: KeyboardAction.search,
-        ), 
-         VirtualKeyboardOptions(
-          type: VirtualKeyboardType.numeric,
-          action: KeyboardAction.done,
-        ), 
-         VirtualKeyboardOptions(
-          type: VirtualKeyboardType.phone,
-          action: KeyboardAction.done,
-        ), 
-         VirtualKeyboardOptions(
-          initialLanguage: KeyboardLanguage.en,
-          type: VirtualKeyboardType.email,
-          action: KeyboardAction.done,
-        )];
-    }
+      VirtualKeyboardOptions(
+        initialLanguage: KeyboardLanguage.ru,
+        additionalLanguages: [KeyboardLanguage.en],
+        type: VirtualKeyboardType.alphabetic,
+        action: KeyboardAction.newLine,
+      ),
+      VirtualKeyboardOptions(
+        initialLanguage: KeyboardLanguage.ru,
+        additionalLanguages: [KeyboardLanguage.en],
+        type: VirtualKeyboardType.alphabetic,
+        action: KeyboardAction.done,
+      ),
+      VirtualKeyboardOptions(
+        initialLanguage: KeyboardLanguage.ru,
+        type: VirtualKeyboardType.alphabetic,
+        action: KeyboardAction.search,
+      ),
+      VirtualKeyboardOptions(
+        type: VirtualKeyboardType.numeric,
+        action: KeyboardAction.done,
+      ),
+      VirtualKeyboardOptions(
+        type: VirtualKeyboardType.phone,
+        action: KeyboardAction.done,
+      ),
+      VirtualKeyboardOptions(
+        initialLanguage: KeyboardLanguage.en,
+        type: VirtualKeyboardType.email,
+        action: KeyboardAction.done,
+      )
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +125,7 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
           children: getOptions().map((option) {
             final controller = TextEditingController();
             controllers.add(controller);
-            final type =option.type;
+            final type = option.type;
             final options = option;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -160,7 +166,8 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
         ),
       ),
     );
-}}
+  }
+}
 
 class ThemeController extends ChangeNotifier {
   bool isDark = false;

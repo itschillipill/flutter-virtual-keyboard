@@ -49,7 +49,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   }
 
   static const String _getNumberRow = "1234567890";
-  
+
   List<String> _getLayoutRows() {
     if (_isUppercase) {
       return _currentLanguage.characters.map((e) => e.toUpperCase()).toList();

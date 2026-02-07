@@ -109,14 +109,17 @@ class _KeyboardKeyState extends State<KeyboardKey> {
         },
         onLongPressEnd: (_) => _removeOverlay(),
         child: Material(
-          color:theme.backgroundColor,
+          color: theme.backgroundColor,
           borderRadius: theme.borderRadius,
           elevation: widget.active ? 4 : 0,
           child: SizedBox(
             height: 48,
             child: Center(
               child: widget.icon != null
-                  ? Icon(widget.icon, color: theme.foregroundColor,)
+                  ? Icon(
+                      widget.icon,
+                      color: theme.foregroundColor,
+                    )
                   : Text(widget.label!, style: theme.textStyle),
             ),
           ),
