@@ -19,12 +19,28 @@ class MyApp extends StatelessWidget {
     final themeController = context.watch<ThemeController>();
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Virtual Keyboard Demo',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: themeController.isDark ? ThemeMode.dark : ThemeMode.light,
+      themeMode: !themeController.isDark ? ThemeMode.dark : ThemeMode.light,
       home: const KeyboardTestPage(),
-      builder: (context, child) => VirtualKeyboardScope(child: child!),
+      builder: (context, child) => VirtualKeyboardScope(
+         themeData: VirtualKeyboardThemeData(
+          keyTheme: KeyboardButtonTheme(
+            backgroundColor: themeController.isDark ? Colors.grey.shade900 : Colors.white,
+            foregroundColor: themeController.isDark ? Colors.grey.shade200 : Colors.grey.shade800,
+            textStyle: TextStyle(color: themeController.isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
+            borderRadius: BorderRadius.circular(8),
+            padding: const EdgeInsets.all(2),
+            border: const Border(),
+          ),
+          backgroundColor: Colors.redAccent.shade700,
+          border: const Border(),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+          padding: const EdgeInsets.all(4)
+         ),
+        child: child!,),
     );
   }
 }
@@ -37,48 +53,48 @@ class KeyboardTestPage extends StatefulWidget {
 }
 
 class _KeyboardTestPageState extends State<KeyboardTestPage> {
-  final controllers = <VirtualKeyboardType, TextEditingController>{
-    VirtualKeyboardType.alphabetic: TextEditingController(),
-    VirtualKeyboardType.numeric: TextEditingController(),
-    VirtualKeyboardType.phone: TextEditingController(),
-    VirtualKeyboardType.email: TextEditingController(),
-  };
-
+  List<TextEditingController> controllers = <TextEditingController>[];
   @override
   void dispose() {
-    for (var c in controllers.values) {
+    for (var c in controllers) {
       c.dispose();
     }
     super.dispose();
   }
 
-  VirtualKeyboardOptions getOptions(VirtualKeyboardType type) {
-    switch (type) {
-      case VirtualKeyboardType.alphabetic:
-        return const VirtualKeyboardOptions(
+  List<VirtualKeyboardOptions> getOptions() {
+    return const [
+       VirtualKeyboardOptions(
+          initialLanguage: KeyboardLanguage.ru,
+          additionalLanguages: [KeyboardLanguage.en],
+          type: VirtualKeyboardType.alphabetic,
+          action: KeyboardAction.newLine,
+        ), 
+         VirtualKeyboardOptions(
           initialLanguage: KeyboardLanguage.ru,
           additionalLanguages: [KeyboardLanguage.en],
           type: VirtualKeyboardType.alphabetic,
           action: KeyboardAction.done,
-        );
-      case VirtualKeyboardType.numeric:
-        return const VirtualKeyboardOptions(
+        ), 
+         VirtualKeyboardOptions(
+          initialLanguage: KeyboardLanguage.ru,
+          type: VirtualKeyboardType.alphabetic,
+          action: KeyboardAction.search,
+        ), 
+         VirtualKeyboardOptions(
           type: VirtualKeyboardType.numeric,
           action: KeyboardAction.done,
-        );
-      case VirtualKeyboardType.phone:
-        return const VirtualKeyboardOptions(
+        ), 
+         VirtualKeyboardOptions(
           type: VirtualKeyboardType.phone,
           action: KeyboardAction.done,
-        );
-      case VirtualKeyboardType.email:
-        return const VirtualKeyboardOptions(
+        ), 
+         VirtualKeyboardOptions(
           initialLanguage: KeyboardLanguage.en,
           type: VirtualKeyboardType.email,
           action: KeyboardAction.done,
-        );
+        )];
     }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,16 +108,19 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
               themeController.isDark ? Icons.dark_mode : Icons.light_mode,
             ),
             onPressed: () => themeController.toggle(),
-          )
+          ),
+          const BackButton(),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: VirtualKeyboardType.values.map((type) {
-            final controller = controllers[type]!;
-            final options = getOptions(type);
+          children: getOptions().map((option) {
+            final controller = TextEditingController();
+            controllers.add(controller);
+            final type =option.type;
+            final options = option;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Card(
@@ -141,8 +160,7 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
         ),
       ),
     );
-  }
-}
+}}
 
 class ThemeController extends ChangeNotifier {
   bool isDark = false;

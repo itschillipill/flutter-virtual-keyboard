@@ -1,0 +1,22 @@
+name: flutter_virtual_keyboard_example
+description: Example app for flutter_virtual_keyboard plugin
+version: 0.0.1-dev
+publish_to: "none" 
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_virtual_keyboard:
+    path: ../
+  provider: ^6.1.5+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
