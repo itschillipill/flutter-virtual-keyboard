@@ -23,27 +23,11 @@ class MyApp extends StatelessWidget {
       title: 'Virtual Keyboard Demo',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: !themeController.isDark ? ThemeMode.dark : ThemeMode.light,
+      themeMode: themeController.isDark ? ThemeMode.dark : ThemeMode.light,
       home: const KeyboardTestPage(),
       builder: (context, child) => VirtualKeyboardScope(
-        themeData: VirtualKeyboardThemeData(
-            keyTheme: KeyboardButtonTheme(
-              backgroundColor:
-                  themeController.isDark ? Colors.grey.shade900 : Colors.white,
-              foregroundColor: themeController.isDark
-                  ? Colors.grey.shade200
-                  : Colors.grey.shade800,
-              textStyle: TextStyle(
-                  color: themeController.isDark ? Colors.white : Colors.black,
-                  fontWeight: FontWeight.bold),
-              borderRadius: BorderRadius.circular(8),
-              padding: const EdgeInsets.all(2),
-              border: const Border(),
-            ),
-            backgroundColor: Colors.redAccent.shade700,
-            border: const Border(),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            padding: const EdgeInsets.all(4)),
+        themeData: themeController.isDark
+            ? VirtualKeyboardThemeData.dark(): VirtualKeyboardThemeData.light(),
         child: child!,
       ),
     );

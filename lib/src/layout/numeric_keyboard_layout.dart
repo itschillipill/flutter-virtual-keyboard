@@ -56,8 +56,8 @@ class _NumericKeyboardLayoutState extends State<NumericKeyboardLayout> {
                 case '0+':
                   return KeyboardKey(
                     label: '0',
-                    aditionalCharacters: const ['+'],
-                    onTap: () => widget.controller.insert('0'),
+                    additionalCharacters: const ['+'],
+                    onTap:widget.controller.insert,
                   );
                 default:
                   return KeyboardKey.buildCharKey(key, widget.controller);
