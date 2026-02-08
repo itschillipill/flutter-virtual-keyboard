@@ -46,9 +46,7 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AnimatedSwitcher(
+    return  AnimatedSwitcher(
         duration: Durations.medium1,
         child: switch (_options.type) {
           VirtualKeyboardType.alphabetic => AlphabeticKeyboardLayout(
@@ -60,10 +58,9 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
               options: _options,
             ),
           _ => const Center(
-              child: Text("not implemented yet"),
+              child: Material(child: Text("not implemented yet")),
             )
         },
-      ),
     );
   }
 }

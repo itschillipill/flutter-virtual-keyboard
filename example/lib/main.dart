@@ -105,48 +105,59 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: getOptions().map((option) {
-            final controller = TextEditingController();
-            controllers.add(controller);
-            final type = option.type;
-            final options = option;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Card(
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        "${type.name.toUpperCase()} Keyboard",
-                        style: Theme.of(context).textTheme.titleMedium,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: getOptions().map((option) {
+                final controller = TextEditingController();
+                controllers.add(controller);
+                final type = option.type;
+                final options = option;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            "${type.name.toUpperCase()} Keyboard",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Options: "
+                            "initialLanguage=${options.initialLanguage.name}, "
+                            "additionalLanguages=[${options.additionalLanguages.map((e) => e.name).join(', ')}], "
+                            "action=${options.action.name}",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 8),
+                          VirtualKeyboardTextField(
+                            controller: controller,
+                            keyboardOptions: options,
+                            maxLines:
+                                type == VirtualKeyboardType.alphabetic ? 2 : 1,
+                            onSubmitted: (value) =>
+                                debugPrint("${type.name} submitted: $value"),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "Options: "
-                        "initialLanguage=${options.initialLanguage.name}, "
-                        "additionalLanguages=[${options.additionalLanguages.map((e) => e.name).join(', ')}], "
-                        "action=${options.action.name}",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 8),
-                      VirtualKeyboardTextField(
-                        controller: controller,
-                        keyboardOptions: options,
-                        maxLines:
-                            type == VirtualKeyboardType.alphabetic ? 2 : 1,
-                        onSubmitted: (value) =>
-                            debugPrint("${type.name} submitted: $value"),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
+                );
+              }).toList(),
+            ),
+            SizedBox(
+                        height: 1000,
+                        child: Center(
+                          child: Text("Space"),
+                        ),
+                      )
+          ],
         ),
       ),
     );

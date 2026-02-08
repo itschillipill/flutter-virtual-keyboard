@@ -137,6 +137,7 @@ class VirtualKeyboardTheme extends InheritedWidget {
     return data != oldWidget.data;
   }
 }
+
 class VirtualKeyboardPieTheme {
   final Color buttonBackgroundColor;
   final Color buttonIconColor;
@@ -161,6 +162,7 @@ class VirtualKeyboardPieTheme {
         backgroundColor: buttonBackgroundColor,
         iconColor: buttonIconColor,
       ),
+      overlayStyle: PieOverlayStyle.around,
       buttonSize: buttonSize,
       pointerColor: pointerColor,
       overlayColor: overlayColor,
