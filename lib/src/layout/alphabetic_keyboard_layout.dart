@@ -23,24 +23,18 @@ class AlphabeticKeyboardLayout extends StatefulWidget {
 
 class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   late KeyboardLanguage _currentLanguage;
-  // ignore: unused_field
-  List<String>? _suggestions;
-
   bool _isUppercase = false;
+
   @override
   void initState() {
     super.initState();
     _currentLanguage = widget.options.initialLanguage;
-    _suggestions = widget.options.suggestionBuilder?.call(
-      widget.controller.value.text,
-    );
   }
 
   @override
   void didUpdateWidget(covariant AlphabeticKeyboardLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Если initialLanguage изменился
     if (oldWidget.options.initialLanguage != widget.options.initialLanguage ||
         !_availableLanguages(oldWidget.options).contains(_currentLanguage)) {
       _currentLanguage = widget.options.initialLanguage;
@@ -52,7 +46,9 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
 
   List<String> _getLayoutRows() {
     if (_isUppercase) {
-      return _currentLanguage.characters.map((e) => e.toUpperCase()).toList();
+      return _currentLanguage.characters
+          .map((row) => row.toUpperCase())
+          .toList();
     }
     return _currentLanguage.characters;
   }
@@ -83,6 +79,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context);
     final rows = _getLayoutRows();
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Material(
@@ -92,24 +89,36 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // TODO: itschillipill/ implement suggestions
+              // ===== Ряд цифр =====
               KeyboardRow(
                 children: _getNumberRow
                     .split('')
-                    .map((e) => KeyboardKey.buildCharKey(e, widget.controller))
+                    .map(
+                      (e) => KeyboardKey.buildCharKey(
+                        e,
+                        widget.controller,
+                        additional: _currentLanguage.additional[e],
+                      ),
+                    )
                     .toList(),
               ),
-              // === Буквенные ряды ===
-              for (String row in rows.sublist(0, rows.length - 1))
+
+              // ===== Буквенные ряды =====
+              for (int i = 0; i < rows.length - 1; i++)
                 KeyboardRow(
-                  children: row
+                  children: rows[i]
                       .split('')
                       .map(
-                          (e) => KeyboardKey.buildCharKey(e, widget.controller))
+                        (char) => KeyboardKey.buildCharKey(
+                          _isUppercase ? char.toUpperCase() : char,
+                          widget.controller,
+                          additional: _currentLanguage.additional[char],
+                        ),
+                      )
                       .toList(),
                 ),
 
-              // === Ряд: Caps + Backspace ===
+              // ===== Ряд: Caps + Последний буквенный ряд + Backspace =====
               KeyboardRow(
                 children: [
                   KeyboardKey.buildIconKey(
@@ -117,8 +126,16 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
                     onTap: _toggleUppercase,
                     active: _isUppercase,
                   ),
-                  ...rows.last.split('').map(
-                      (e) => KeyboardKey.buildCharKey(e, widget.controller)),
+                  ...rows.last
+                      .split('')
+                      .map(
+                        (char) => KeyboardKey.buildCharKey(
+                          _isUppercase ? char.toUpperCase() : char,
+                          widget.controller,
+                          additional: _currentLanguage.additional[char],
+                        ),
+                      )
+                      .toList(),
                   KeyboardKey.buildIconKey(
                     icon: Icons.backspace,
                     onTap: widget.controller.backspace,
@@ -126,7 +143,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
                 ],
               ),
 
-              // === Нижний ряд ===
+              // ===== Нижний ряд =====
               KeyboardRow(
                 children: [
                   KeyboardKey.buildIconKey(

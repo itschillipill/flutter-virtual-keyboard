@@ -157,7 +157,7 @@ class VirtualKeyboardPieTheme {
 
   PieTheme toPieTheme() {
     return PieTheme(
-      radius: radius,
+      radius: 50,
       buttonTheme: PieButtonTheme(
         backgroundColor: buttonBackgroundColor,
         iconColor: buttonIconColor,

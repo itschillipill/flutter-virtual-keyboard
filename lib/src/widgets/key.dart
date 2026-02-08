@@ -30,7 +30,6 @@ class KeyboardKey extends StatefulWidget {
     this.active = false,
     this.flex = 1,
     this.additionalCharacters,
-    this.showPieOnlyWhenHasAdditional = true,
     this.pieMenuTheme,
   });
 
@@ -40,7 +39,6 @@ class KeyboardKey extends StatefulWidget {
   final Function(String char)? onTap;
   final bool active;
   final int flex;
-  final bool showPieOnlyWhenHasAdditional;
   final PieTheme? pieMenuTheme;
 
     bool get hasAdditional =>
@@ -53,13 +51,11 @@ class KeyboardKey extends StatefulWidget {
     String char,
     VirtualKeyboardController controller, {
     List<String>? additional,
-    bool showPieOnlyWhenHasAdditional = true,
     PieTheme? pieTheme,
   }) =>
       KeyboardKey(
         label: char,
         additionalCharacters: additional,
-        showPieOnlyWhenHasAdditional: showPieOnlyWhenHasAdditional,
         pieMenuTheme: pieTheme,
         onTap: controller.insert,
       );
@@ -152,8 +148,8 @@ class _KeyboardKeyState extends State<KeyboardKey> {
           Align(
             alignment: Alignment.topRight,
             child: Text(
-                  widget.additionalCharacters!.join(''),
-                  style: theme.textStyle,
+                  widget.additionalCharacters!.first,
+                style: theme.textStyle.copyWith(fontSize: (theme.textStyle.fontSize??18) * 0.7),
                 ),
           ),
       ],
