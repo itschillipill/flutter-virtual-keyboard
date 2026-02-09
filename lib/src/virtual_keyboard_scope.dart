@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_virtual_keyboard/src/virtual_keyboard_theme.dart';
-import 'package:pie_menu/pie_menu.dart';
 
 import '../flutter_virtual_keyboard.dart' show VirtualKeyboardTextFieldState;
 import 'virtual_keyboard_controller.dart';
@@ -89,27 +88,25 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
                     }
                   }
                 },
-                child: PieCanvas(
-                  child: Stack(
-                    children: [
-                      widget.child,
-                      AnimatedPositioned(
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.fastEaseInToSlowEaseOut,
-                        left: 0,
-                        right: 0,
-                        bottom: isOpen ? 0 : -keyboardHeight * 2,
-                        child: VirtualKeyboardTheme(
-                          data: widget.themeData ?? _defaultThemeData,
-                          child: VirtualKeyboardWidget(
-                            key: _keyboardKey,
-                            controller: _controller,
-                            virtualKeyboardHeight: keyboardHeight,
-                          ),
+                child: Stack(
+                  children: [
+                    widget.child,
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                      left: 0,
+                      right: 0,
+                      bottom: isOpen ? 0 : -keyboardHeight * 2,
+                      child: VirtualKeyboardTheme(
+                        data: widget.themeData ?? _defaultThemeData,
+                        child: VirtualKeyboardWidget(
+                          key: _keyboardKey,
+                          controller: _controller,
+                          virtualKeyboardHeight: keyboardHeight,
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

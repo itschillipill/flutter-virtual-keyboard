@@ -27,7 +27,8 @@ class MyApp extends StatelessWidget {
       home: const KeyboardTestPage(),
       builder: (context, child) => VirtualKeyboardScope(
         themeData: themeController.isDark
-            ? VirtualKeyboardThemeData.dark(): VirtualKeyboardThemeData.light(),
+            ? VirtualKeyboardThemeData.dark()
+            : VirtualKeyboardThemeData.light(),
         child: child!,
       ),
     );
@@ -152,11 +153,11 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
               }).toList(),
             ),
             SizedBox(
-                        height: 1000,
-                        child: Center(
-                          child: Text("Space"),
-                        ),
-                      )
+              height: 1000,
+              child: Center(
+                child: Text("Space"),
+              ),
+            )
           ],
         ),
       ),

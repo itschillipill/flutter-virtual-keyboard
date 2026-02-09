@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pie_menu/pie_menu.dart';
 
 import '../../flutter_virtual_keyboard.dart';
 import '../virtual_keyboard_controller.dart';
@@ -30,7 +29,6 @@ class KeyboardKey extends StatefulWidget {
     this.active = false,
     this.flex = 1,
     this.additionalCharacters,
-    this.pieMenuTheme,
   });
 
   final String? label;
@@ -39,9 +37,8 @@ class KeyboardKey extends StatefulWidget {
   final Function(String char)? onTap;
   final bool active;
   final int flex;
-  final PieTheme? pieMenuTheme;
 
-    bool get hasAdditional =>
+  bool get hasAdditional =>
       additionalCharacters != null && additionalCharacters!.isNotEmpty;
 
   @override
@@ -51,45 +48,33 @@ class KeyboardKey extends StatefulWidget {
     String char,
     VirtualKeyboardController controller, {
     List<String>? additional,
-    PieTheme? pieTheme,
   }) =>
       KeyboardKey(
         label: char,
         additionalCharacters: additional,
-        pieMenuTheme: pieTheme,
         onTap: controller.insert,
       );
 
   static KeyboardKey buildSpaceKey(
     VirtualKeyboardController controller, {
     int flex = 5,
-    PieTheme? pieTheme,
   }) =>
       KeyboardKey(
         icon: Icons.space_bar_rounded,
         flex: flex,
-        pieMenuTheme: pieTheme,
         onTap: (_) => controller.insert(' '),
       );
 
-  static KeyboardKey buildBackspaceKey(
-    VirtualKeyboardController controller, {
-    PieTheme? pieTheme,
-  }) =>
+  static KeyboardKey buildBackspaceKey(VirtualKeyboardController controller) =>
       KeyboardKey(
         icon: Icons.backspace,
-        pieMenuTheme: pieTheme,
         onTap: (_) => controller.backspace(),
       );
 
   static KeyboardKey buildActionKey(
-    VirtualKeyboardController controller,
-    KeyboardAction action, {
-    PieTheme? pieTheme,
-  }) =>
+          VirtualKeyboardController controller, KeyboardAction action) =>
       KeyboardKey.buildIconKey(
         icon: action.icon,
-        pieTheme: pieTheme,
         onTap: () {
           switch (action) {
             case KeyboardAction.newLine:
@@ -107,117 +92,145 @@ class KeyboardKey extends StatefulWidget {
     required IconData icon,
     required VoidCallback onTap,
     bool active = false,
-    PieTheme? pieTheme,
   }) =>
       KeyboardKey(
         icon: icon,
-        pieMenuTheme: pieTheme,
         onTap: (_) => onTap(),
         active: active,
       );
 }
 
 class _KeyboardKeyState extends State<KeyboardKey> {
+  int _selectedIndex = -1;
+  bool _isLongPressing = false;
+
   void _handleTap() {
-    final value = widget.label ?? '';
-    if (widget.onTap != null) {
-      widget.onTap!(value);
-    }
+    widget.onTap?.call(widget.label ?? '');
   }
 
-  Widget _buildContent(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context).keyTheme;
+    final allChars = widget.hasAdditional
+        ? [widget.label!, ...widget.additionalCharacters!]
+        : [];
 
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: widget.icon != null
-              ? Icon(
-                  widget.icon,
-                  size: 24,
-                  color: theme.foregroundColor,
-                )
-              : Text(
-                  widget.label ?? '',
-                  style: theme.textStyle,
-                ),
-        ),
-
-        if (widget.hasAdditional && widget.label != null)
-          Align(
-            alignment: Alignment.topRight,
-            child: Text(
-                  widget.additionalCharacters!.first,
-                style: theme.textStyle.copyWith(fontSize: (theme.textStyle.fontSize??18) * 0.7),
-                ),
+    return Padding(
+      padding: theme.padding,
+      // Stack с clipBehavior: Clip.none позволяет рисовать меню за пределами контейнера клавиши
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          GestureDetector(
+            onTap: _handleTap,
+            onLongPressStart: (details) {
+              if (widget.hasAdditional) {
+                setState(() {
+                  _isLongPressing = true;
+                  _selectedIndex = 0;
+                });
+              }
+            },
+            onLongPressMoveUpdate: (details) {
+              if (_isLongPressing) {
+                double localX = details.localPosition.dx;
+                int newIndex =
+                    (localX / 40).floor().clamp(0, allChars.length - 1);
+                if (newIndex != _selectedIndex) {
+                  setState(() => _selectedIndex = newIndex);
+                }
+              }
+            },
+            onLongPressEnd: (details) {
+              if (_isLongPressing) {
+                if (_selectedIndex != -1) {
+                  widget.onTap?.call(allChars[_selectedIndex]);
+                }
+                setState(() {
+                  _isLongPressing = false;
+                  _selectedIndex = -1;
+                });
+              }
+            },
+            child: _buildButton(context),
           ),
-      ],
-    );
-  }
-    Widget _buildWithPieMenu(BuildContext context) {
-    final pieTheme =
-        widget.pieMenuTheme ?? VirtualKeyboardTheme.of(context).pieTheme.toPieTheme();
-
-    return PieMenu(
-      theme: pieTheme,
-      actions: _buildPieActions(),
-      child: _buildButton(context),
-    );
-  }
-
-  List<PieAction> _buildPieActions() {
-    return widget.additionalCharacters!
-        .map(
-          (char) => PieAction(
-            tooltip: Text(char),
-            onSelect: () => widget.onTap?.call(char),
-            child: Center(
-              child: Text(
-                char,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+          if (_isLongPressing)
+            Positioned(
+              bottom: 55,
+              left: -(allChars.length * 20.0) + 20,
+              child: Material(
+                elevation: 4,
+                color: theme.backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(allChars.length, (i) {
+                      bool isSel = _selectedIndex == i;
+                      return Container(
+                        width: 40,
+                        height: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSel ? Colors.blue : Colors.transparent,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          allChars[i],
+                          style: theme.textStyle.copyWith(
+                            color: isSel ? Colors.white : theme.foregroundColor,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ),
             ),
-          ),
-        )
-        .toList();
+        ],
+      ),
+    );
   }
 
   Widget _buildButton(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context).keyTheme;
-
-    return Material(
-      color: widget.active
-          ? theme.backgroundColor.withValues(alpha: 0.9)
-          : theme.backgroundColor,
-      borderRadius: theme.borderRadius,
-      elevation: widget.active ? 4 : 0,
-      child: InkWell(
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: widget.active
+            ? theme.backgroundColor.withValues(alpha: 0.9)
+            : theme.backgroundColor,
         borderRadius: theme.borderRadius,
-        onTap: _handleTap,
-        child: Container(
-          height: 48,
-          alignment: Alignment.center,
-          child: _buildContent(context),
-        ),
       ),
+      child: _buildContent(context),
     );
   }
-    @override
-  Widget build(BuildContext context) {
-    final theme = VirtualKeyboardTheme.of(context).keyTheme;
 
-    return Padding(
-      padding: theme.padding,
-      child: SizedBox(
-        height: 48,
-        child: widget.hasAdditional
-            ? _buildWithPieMenu(context)
-            : _buildButton(context),
-      ),
+  Widget _buildContent(BuildContext context) {
+    final theme = VirtualKeyboardTheme.of(context).keyTheme;
+    return Stack(
+      children: [
+        Center(
+          child: widget.icon != null
+              ? Icon(widget.icon, size: 24, color: theme.foregroundColor)
+              : Text(widget.label ?? '', style: theme.textStyle),
+        ),
+        if (widget.hasAdditional && widget.label != null)
+          Positioned(
+            top: 2,
+            right: 4,
+            child: Text(
+              widget.additionalCharacters!.first,
+              style: theme.textStyle
+                  .copyWith(fontSize: (theme.textStyle.fontSize ?? 18) * 0.6),
+            ),
+          ),
+      ],
     );
   }
 }

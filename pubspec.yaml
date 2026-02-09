@@ -27,7 +27,6 @@ environment:
 dependencies: 
   flutter:
     sdk: flutter
-  pie_menu: ^3.3.4
 
 flutter:
   uses-material-design: true

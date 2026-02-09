@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pie_menu/pie_menu.dart';
 
 class VirtualKeyboardThemeData {
   final KeyboardButtonTheme keyTheme;
@@ -36,7 +35,6 @@ class VirtualKeyboardThemeData {
       pieTheme: const VirtualKeyboardPieTheme(
         buttonBackgroundColor: Colors.blue,
         buttonIconColor: Colors.white,
-        radius: 120,
       ),
       backgroundColor: Colors.grey.shade100,
       border: Border.all(color: Colors.grey.shade300, width: 1),
@@ -62,7 +60,6 @@ class VirtualKeyboardThemeData {
       pieTheme: const VirtualKeyboardPieTheme(
         buttonBackgroundColor: Colors.blueAccent,
         buttonIconColor: Colors.white,
-        radius: 120,
       ),
       backgroundColor: Colors.grey.shade900,
       border: Border.all(color: Colors.grey.shade800, width: 1),
@@ -88,7 +85,6 @@ class VirtualKeyboardThemeData {
       pieTheme: VirtualKeyboardPieTheme(
         buttonBackgroundColor: colorScheme.primary,
         buttonIconColor: colorScheme.onPrimary,
-        radius: 120,
       ),
       backgroundColor: colorScheme.surfaceContainerHighest,
       border: Border.all(color: colorScheme.outlineVariant, width: 1),
@@ -141,7 +137,6 @@ class VirtualKeyboardTheme extends InheritedWidget {
 class VirtualKeyboardPieTheme {
   final Color buttonBackgroundColor;
   final Color buttonIconColor;
-  final double radius;
   final double buttonSize;
   final Color pointerColor;
   final Color overlayColor;
@@ -149,23 +144,8 @@ class VirtualKeyboardPieTheme {
   const VirtualKeyboardPieTheme({
     this.buttonBackgroundColor = Colors.white,
     this.buttonIconColor = Colors.black,
-    this.radius = 100,
     this.buttonSize = 48,
     this.pointerColor = Colors.white,
     this.overlayColor = const Color(0x10000000),
   });
-
-  PieTheme toPieTheme() {
-    return PieTheme(
-      radius: 50,
-      buttonTheme: PieButtonTheme(
-        backgroundColor: buttonBackgroundColor,
-        iconColor: buttonIconColor,
-      ),
-      overlayStyle: PieOverlayStyle.around,
-      buttonSize: buttonSize,
-      pointerColor: pointerColor,
-      overlayColor: overlayColor,
-    );
-  }
 }
