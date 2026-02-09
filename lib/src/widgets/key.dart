@@ -107,92 +107,119 @@ class _KeyboardKeyState extends State<KeyboardKey> {
   void _handleTap() {
     widget.onTap?.call(widget.label ?? '');
   }
+ double _calculateMenuLeft(int charCount, double keyWidth) {
+    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return 0;
 
-  @override
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final Offset globalPos = renderBox.localToGlobal(Offset.zero);
+    final double menuWidth = charCount * 40.0 + 8; // ширина кнопок + padding
+
+    // Идеальная позиция (центрирование над клавишей)
+    double left = (keyWidth / 2) - (menuWidth / 2);
+
+    // Проверка правой границы экрана
+    if (globalPos.dx + left + menuWidth > screenWidth) {
+      left = screenWidth - globalPos.dx - menuWidth - 8; // 8 - отступ от края экрана
+    }
+
+    // Проверка левой границы экрана
+    if (globalPos.dx + left < 0) {
+      left = -globalPos.dx + 8;
+    }
+
+    return left;
+  }
+
+    @override
   Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context).keyTheme;
-    final allChars = widget.hasAdditional
-        ? [widget.label!, ...widget.additionalCharacters!]
-        : [];
+    final allChars = widget.additionalCharacters??[];
 
     return Padding(
       padding: theme.padding,
-      // Stack с clipBehavior: Clip.none позволяет рисовать меню за пределами контейнера клавиши
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          GestureDetector(
-            onTap: _handleTap,
-            onLongPressStart: (details) {
-              if (widget.hasAdditional) {
-                setState(() {
-                  _isLongPressing = true;
-                  _selectedIndex = 0;
-                });
-              }
-            },
-            onLongPressMoveUpdate: (details) {
-              if (_isLongPressing) {
-                double localX = details.localPosition.dx;
-                int newIndex =
-                    (localX / 40).floor().clamp(0, allChars.length - 1);
-                if (newIndex != _selectedIndex) {
-                  setState(() => _selectedIndex = newIndex);
-                }
-              }
-            },
-            onLongPressEnd: (details) {
-              if (_isLongPressing) {
-                if (_selectedIndex != -1) {
-                  widget.onTap?.call(allChars[_selectedIndex]);
-                }
-                setState(() {
-                  _isLongPressing = false;
-                  _selectedIndex = -1;
-                });
-              }
-            },
-            child: _buildButton(context),
-          ),
-          if (_isLongPressing)
-            Positioned(
-              bottom: 55,
-              left: -(allChars.length * 20.0) + 20,
-              child: Material(
-                elevation: 4,
-                color: theme.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black12),
+      child: LayoutBuilder( 
+        builder: (context, constraints) {
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              GestureDetector(
+                onTap: _handleTap,
+                onLongPressStart: (details) {
+                  if (widget.hasAdditional) {
+                    setState(() {
+                      _isLongPressing = true;
+                      _selectedIndex = 0;
+                    });
+                  }
+                },
+                onLongPressMoveUpdate: (details) {
+                  if (_isLongPressing) {
+                    double menuLeft = _calculateMenuLeft(allChars.length, constraints.maxWidth);
+                    
+                    double fingerXInMenu = details.localPosition.dx - menuLeft;
+                    int newIndex = (fingerXInMenu / 40).floor().clamp(0, allChars.length - 1);
+                    
+                    if (newIndex != _selectedIndex) {
+                      setState(() => _selectedIndex = newIndex);
+                    }
+                  }
+                },
+                onLongPressEnd: (details) {
+                  if (_isLongPressing) {
+                    if (_selectedIndex != -1) {
+                      widget.onTap?.call(allChars[_selectedIndex]);
+                    }
+                    setState(() {
+                      _isLongPressing = false;
+                      _selectedIndex = -1;
+                    });
+                  }
+                },
+                child: _buildButton(context),
+              ),
+              if (_isLongPressing)
+                Positioned(
+                  bottom: 55,
+                  // Динамически вычисляем отступ слева
+                  left: _calculateMenuLeft(allChars.length, constraints.maxWidth),
+                  child: Material(
+                    elevation: 4,
+                    color: theme.backgroundColor,
                     borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(allChars.length, (i) {
-                      bool isSel = _selectedIndex == i;
-                      return Container(
-                        width: 40,
-                        height: 45,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: isSel ? Colors.blue : Colors.transparent,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          allChars[i],
-                          style: theme.textStyle.copyWith(
-                            color: isSel ? Colors.white : theme.foregroundColor,
-                          ),
-                        ),
-                      );
-                    }),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(allChars.length, (i) {
+                          bool isSel = _selectedIndex == i;
+                          return Container(
+                            width: 40,
+                            height: 45,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isSel ? Colors.blue : Colors.transparent,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              allChars[i],
+                              style: theme.textStyle.copyWith(
+                                color: isSel ? Colors.white : theme.foregroundColor,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-        ],
+            ],
+          );
+        }
       ),
     );
   }
