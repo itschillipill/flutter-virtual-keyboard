@@ -146,10 +146,16 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
               // ===== Нижний ряд =====
               KeyboardRow(
                 children: [
-                  KeyboardKey.buildIconKey(
-                    icon: Icons.emoji_emotions_rounded,
-                    onTap: () {},
-                  ),
+                  KeyboardKey.buildCharKey(
+                    '.',
+                    additional: [","],
+                    widget.controller,
+                    ),
+                  if(widget.options.type == VirtualKeyboardType.email) 
+                  KeyboardKey.buildCharKey(
+                    '@',
+                    widget.controller,
+                    ),
                   if (widget.options.additionalLanguages.isNotEmpty)
                     KeyboardKey.buildIconKey(
                       icon: Icons.language,

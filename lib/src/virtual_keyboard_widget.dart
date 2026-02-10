@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'layout/alphabetic_keyboard_layout.dart';
 import 'layout/numeric_keyboard_layout.dart';
+import 'layout/phone_keyboard_layout.dart';
 import 'virtual_keyboard_controller.dart';
 import 'virtual_keyboard_options.dart';
 
@@ -49,7 +50,7 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
     return AnimatedSwitcher(
       duration: Durations.medium1,
       child: switch (_options.type) {
-        VirtualKeyboardType.alphabetic => AlphabeticKeyboardLayout(
+        VirtualKeyboardType.alphabetic || VirtualKeyboardType.email => AlphabeticKeyboardLayout(
             controller: widget.controller,
             options: _options,
           ),
@@ -57,9 +58,10 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
             controller: widget.controller,
             options: _options,
           ),
-        _ => const Center(
-            child: Material(child: Text("not implemented yet")),
-          )
+        VirtualKeyboardType.phone => PhoneKeyboardLayout(
+            controller: widget.controller,
+            options: _options,
+        )
       },
     );
   }

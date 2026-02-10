@@ -29,13 +29,10 @@ Keyboard works **only inside the application**.
 - Custom controller
 - Keyboard scope
 - Animated show / hide
-
+- Long-press additional characters
 ---
 
 ## In progress / Planned
-
-- Long-press additional characters
-- Runtime height calculation
 - Accessibility improvements
 - Performance optimizations
 
