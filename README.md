@@ -1,7 +1,3 @@
-Готовый файл `README.md` для вашего пакета:
-
----
-
 # Virtual Keyboard (WIP)
 
 ⚠️ **Work in progress / Experimental**
