@@ -64,7 +64,7 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
           canPop: !isOpen,
           onPopInvokedWithResult: (didPop, result) {
             if (!didPop && isOpen) {
-              _controller.hide();
+              _controller.hide(unfocusField: true);
             }
           },
           child: Directionality(
