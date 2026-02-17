@@ -55,20 +55,22 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, __) {
-        final isOpen = _controller.isOpen;
-        double keyboardHeight = _controller.keyboardHeight;
-        return PopScope(
-          canPop: !isOpen,
-          onPopInvokedWithResult: (didPop, result) {
-            if (!didPop && isOpen) {
-              _controller.hide(unfocusField: true);
-            }
-          },
-          child: Directionality(
-            textDirection: TextDirection.ltr,
+    return SafeArea(
+      top: false,
+      left: false,
+      right: false,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (_, __) {
+          final isOpen = _controller.isOpen;
+          double keyboardHeight = _controller.keyboardHeight;
+          return PopScope(
+            canPop: !isOpen,
+            onPopInvokedWithResult: (didPop, result) {
+              if (!didPop && isOpen) {
+                _controller.hide(unfocusField: true);
+              }
+            },
             child: MediaQuery(
               data: MediaQuery.of(context).copyWith(
                 textScaler: const TextScaler.linear(1.0),
@@ -110,9 +112,9 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

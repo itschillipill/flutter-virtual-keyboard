@@ -22,7 +22,7 @@ class AlphabeticKeyboardLayout extends StatefulWidget {
 }
 
 class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
-  late KeyboardLanguage _currentLanguage;
+  late KeyboardLanguageConfig _currentLanguage;
   bool _isUppercase = false;
 
   @override
@@ -42,18 +42,8 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
     }
   }
 
-  static const String _getNumberRow = "1234567890";
-
-  List<String> _getLayoutRows() {
-    if (_isUppercase) {
-      return _currentLanguage.characters
-          .map((row) => row.toUpperCase())
-          .toList();
-    }
-    return _currentLanguage.characters;
-  }
-
-  List<KeyboardLanguage> _availableLanguages(VirtualKeyboardOptions options) {
+  List<KeyboardLanguageConfig> _availableLanguages(
+      VirtualKeyboardOptions options) {
     return [
       options.initialLanguage,
       ...options.additionalLanguages,
@@ -78,7 +68,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   @override
   Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context);
-    final rows = _getLayoutRows();
+    final rows = _currentLanguage.rows;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -91,31 +81,21 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
             children: [
               // ===== Ряд цифр =====
               KeyboardRow(
-                children: _getNumberRow
-                    .split('')
-                    .map(
-                      (e) => KeyboardKey.buildCharKey(
-                        e,
-                        widget.controller,
-                        additional: _currentLanguage.additional[e],
-                      ),
-                    )
-                    .toList(),
-              ),
+                  children: numbers.rows.first.map(
+                (e) => KeyboardKey.buildCharKey(
+                  e,
+                  widget.controller,
+                ),
+              )),
 
               // ===== Буквенные ряды =====
               for (int i = 0; i < rows.length - 1; i++)
                 KeyboardRow(
-                  children: rows[i]
-                      .split('')
-                      .map(
+                  children: rows.elementAt(i).map(
                         (char) => KeyboardKey.buildCharKey(
-                          _isUppercase ? char.toUpperCase() : char,
-                          widget.controller,
-                          additional: _currentLanguage.additional[char],
-                        ),
-                      )
-                      .toList(),
+                            char, widget.controller,
+                            isUpperCase: _isUppercase),
+                      ),
                 ),
 
               // ===== Ряд: Caps + Последний буквенный ряд + Backspace =====
@@ -126,16 +106,10 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
                     onTap: _toggleUppercase,
                     active: _isUppercase,
                   ),
-                  ...rows.last
-                      .split('')
-                      .map(
-                        (char) => KeyboardKey.buildCharKey(
-                          _isUppercase ? char.toUpperCase() : char,
-                          widget.controller,
-                          additional: _currentLanguage.additional[char],
-                        ),
-                      )
-                      .toList(),
+                  ...rows.last.map(
+                    (char) => KeyboardKey.buildCharKey(char, widget.controller,
+                        isUpperCase: _isUppercase),
+                  ),
                   KeyboardKey.buildIconKey(
                     icon: Icons.backspace,
                     onTap: widget.controller.backspace,
@@ -147,14 +121,13 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
               KeyboardRow(
                 children: [
                   KeyboardKey.buildCharKey(
-                    '.',
-                    additional: [","],
+                    KeyboardChar.symbol(".", [","]),
                     widget.controller,
-                    ),
-                  if(widget.options.type == VirtualKeyboardType.email) 
-                  KeyboardKey.buildCharKey(
-                    '@',
-                    widget.controller,
+                  ),
+                  if (widget.options.type == VirtualKeyboardType.email)
+                    KeyboardKey.buildCharKey(
+                      KeyboardChar.symbol('@'),
+                      widget.controller,
                     ),
                   if (widget.options.additionalLanguages.isNotEmpty)
                     KeyboardKey.buildIconKey(

@@ -50,7 +50,9 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
     return AnimatedSwitcher(
       duration: Durations.medium1,
       child: switch (_options.type) {
-        VirtualKeyboardType.alphabetic || VirtualKeyboardType.email => AlphabeticKeyboardLayout(
+        VirtualKeyboardType.alphabetic ||
+        VirtualKeyboardType.email =>
+          AlphabeticKeyboardLayout(
             controller: widget.controller,
             options: _options,
           ),
@@ -61,7 +63,7 @@ class _VirtualKeyboardWidgetState extends State<VirtualKeyboardWidget> {
         VirtualKeyboardType.phone => PhoneKeyboardLayout(
             controller: widget.controller,
             options: _options,
-        )
+          )
       },
     );
   }

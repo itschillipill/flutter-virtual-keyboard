@@ -25,10 +25,10 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       themeMode: themeController.isDark ? ThemeMode.dark : ThemeMode.light,
       home: VirtualKeyboardScope(
-        themeData: themeController.isDark
-            ? VirtualKeyboardThemeData.dark()
-            : VirtualKeyboardThemeData.light(),
-        child: const KeyboardTestPage()),
+          themeData: themeController.isDark
+              ? VirtualKeyboardThemeData.dark()
+              : VirtualKeyboardThemeData.light(),
+          child: const KeyboardTestPage()),
     );
   }
 }
@@ -152,9 +152,15 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
             SizedBox(
               height: 1000,
               child: Center(
-                child: TextButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context) => Placeholder(),));
-                },child: Text("Space")),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Placeholder(),
+                          ));
+                    },
+                    child: Text("Space")),
               ),
             )
           ],

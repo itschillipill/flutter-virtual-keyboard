@@ -11,7 +11,7 @@ class VirtualKeyboardTextField extends StatefulWidget {
   VirtualKeyboardTextField({
     this.key,
     this.groupId = EditableText,
-    this.keyboardOptions = VirtualKeyboardOptions.def,
+    this.keyboardOptions,
     this.undoController,
     this.decoration = const InputDecoration(),
     this.textCapitalization = TextCapitalization.none,
@@ -73,16 +73,17 @@ class VirtualKeyboardTextField extends StatefulWidget {
             maxLength > 0),
         // Assert the following instead of setting it directly to avoid surprising the user by silently changing the value they set.
         assert(
-          !(keyboardOptions.action == KeyboardAction.newLine && maxLines == 1),
+          !(keyboardOptions?.action == KeyboardAction.newLine && maxLines == 1),
           "VirtualKeyboardTextField: must be maxLines > 1 when action == KeyboardAction.newLine",
-        ),
-        assert(
-            !keyboardOptions.additionalLanguages
-                .contains(keyboardOptions.initialLanguage),
-            "Initional language must not be in additional languages");
+        )
+  // ,assert(
+  //     !keyboardOptions.additionalLanguages
+  //         ?.contains(keyboardOptions.initialLanguage),
+  //     "Initional language must not be in additional languages")
+  ;
   final GlobalKey<VirtualKeyboardTextFieldState>? key;
   final TextEditingController controller;
-  final VirtualKeyboardOptions keyboardOptions;
+  final VirtualKeyboardOptions? keyboardOptions;
   final InputDecoration decoration;
   final Object groupId;
   final TextCapitalization textCapitalization;
@@ -160,7 +161,7 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
       vk.attach(
         widget.controller,
         _focusNode,
-        widget.keyboardOptions,
+        widget.keyboardOptions ?? VirtualKeyboardOptions.def,
         this,
         onSubmitted: widget.onSubmitted,
       );
@@ -182,7 +183,6 @@ class VirtualKeyboardTextFieldState extends State<VirtualKeyboardTextField>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return InputDecorator(
       key: key,
       decoration: widget.decoration,

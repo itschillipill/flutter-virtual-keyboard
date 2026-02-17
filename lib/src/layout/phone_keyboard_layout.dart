@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_virtual_keyboard/src/virtual_keyboard_theme.dart';
 
+import '../keyboard_language.dart';
 import '../virtual_keyboard_controller.dart';
 import '../virtual_keyboard_options.dart';
 import '../widgets/key.dart';
@@ -54,13 +55,11 @@ class _PhoneKeyboardLayoutState extends State<PhoneKeyboardLayout> {
                   return KeyboardKey.buildActionKey(
                       widget.controller, widget.options.action);
                 case '0+':
-                  return KeyboardKey(
-                    label: '0',
-                    additionalCharacters: const ['+'],
-                    onTap: widget.controller.insert,
-                  );
+                  return KeyboardKey.buildCharKey(
+                      KeyboardChar.symbol("0", ["+"]), widget.controller);
                 default:
-                  return KeyboardKey.buildCharKey(key, widget.controller);
+                  return KeyboardKey.buildCharKey(
+                      KeyboardChar.symbol(key), widget.controller);
               }
             }).toList(),
           );

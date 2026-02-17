@@ -5,31 +5,31 @@ import 'keyboard_language.dart';
 typedef SuggestionBuilder = List<String> Function(String value);
 
 class VirtualKeyboardOptions {
-  final KeyboardLanguage initialLanguage;
-  final List<KeyboardLanguage> additionalLanguages;
+  final KeyboardLanguageConfig initialLanguage;
+  final List<KeyboardLanguageConfig> additionalLanguages;
   final VirtualKeyboardType type;
   final KeyboardAction action;
   final SuggestionBuilder? suggestionBuilder;
 
   const VirtualKeyboardOptions({
-    this.initialLanguage = KeyboardLanguage.ru,
+    this.initialLanguage = KeyboardLanguages.russian,
     this.additionalLanguages = const [],
     this.type = VirtualKeyboardType.alphabetic,
     this.action = KeyboardAction.done,
     this.suggestionBuilder,
   });
 
-  static const def = VirtualKeyboardOptions(
-    initialLanguage: KeyboardLanguage.ru,
-    additionalLanguages: [KeyboardLanguage.en],
+  static VirtualKeyboardOptions def = VirtualKeyboardOptions(
+    initialLanguage: KeyboardLanguages.russian,
+    additionalLanguages: [KeyboardLanguages.english],
     type: VirtualKeyboardType.alphabetic,
     action: KeyboardAction.done,
     suggestionBuilder: null,
   );
 
   VirtualKeyboardOptions copyWith({
-    KeyboardLanguage? initialLanguage,
-    List<KeyboardLanguage>? additionalLanguages,
+    KeyboardLanguageConfig? initialLanguage,
+    List<KeyboardLanguageConfig>? additionalLanguages,
     VirtualKeyboardType? type,
     KeyboardAction? action,
     SuggestionBuilder? suggestionBuilder,

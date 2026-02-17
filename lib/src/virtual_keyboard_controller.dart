@@ -55,7 +55,6 @@ final class VirtualKeyboardController extends ChangeNotifier {
 
     _value = controller.value;
     _scrollToCaret();
-    _scrollToTextField();
     notifyListeners();
   }
 
@@ -133,21 +132,6 @@ final class VirtualKeyboardController extends ChangeNotifier {
   void hide({bool unfocusField = false}) {
     if (unfocusField) activeFocus?.unfocus();
     detach();
-  }
-
-  void _scrollToTextField() {
-     final key = textFieldKey;
-    if (key == null) return;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = key.currentContext;
-    if (context == null) return;
-    
-    Scrollable.ensureVisible(
-      context,
-      alignment: 0.5,
-    ); 
-    });
   }
 
   void _scrollToCaret() {
