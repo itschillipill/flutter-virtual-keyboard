@@ -47,7 +47,7 @@ class KeyboardKey extends StatefulWidget {
   final KeyboardChar? keyboardChar;
   final IconData? icon;
 
-  final Function(String char)? onTap;
+  final Function(String char, VirtualKeyboardController controller)? onTap;
   final bool active;
   final int flex;
   final bool isUpperCase;
@@ -62,41 +62,36 @@ class KeyboardKey extends StatefulWidget {
   // ===== FACTORIES =====
 
   static KeyboardKey buildCharKey(
-    KeyboardChar keyboardChar,
-    VirtualKeyboardController controller, {
+    KeyboardChar keyboardChar, {
     bool isUpperCase = false,
   }) =>
       KeyboardKey.character(
         keyboardChar: keyboardChar,
         isUpperCase: isUpperCase,
-        onTap: controller.insert,
+        onTap:(char,controller)=> controller.insert(char),
       );
 
-  static KeyboardKey buildSpaceKey(
-    VirtualKeyboardController controller, {
+  static KeyboardKey buildSpaceKey({
     int flex = 5,
   }) =>
       KeyboardKey.icon(
         icon: Icons.space_bar_rounded,
         flex: flex,
-        onTap: (_) => controller.insert(' '),
+        onTap: (_, controller) => controller.insert(' '),
       );
 
-  static KeyboardKey buildBackspaceKey(
-    VirtualKeyboardController controller,
-  ) =>
+  static KeyboardKey buildBackspaceKey() =>
       KeyboardKey.icon(
         icon: Icons.backspace,
-        onTap: (_) => controller.backspace,
+        onTap: (_, controller) => controller.backspace(),
       );
 
   static KeyboardKey buildActionKey(
-    VirtualKeyboardController controller,
     KeyboardAction action,
   ) =>
       KeyboardKey.icon(
         icon: action.icon,
-        onTap: (_) {
+        onTap: (_, controller) {
           switch (action) {
             case KeyboardAction.newLine:
               controller.insert('\n');
@@ -117,7 +112,7 @@ class KeyboardKey extends StatefulWidget {
   }) =>
       KeyboardKey.icon(
         icon: icon,
-        onTap: (_) => onTap(),
+        onTap: (_,controller) => onTap(),
         active: active,
         flex: flex,
       );
@@ -151,13 +146,13 @@ class _KeyboardKeyState extends State<KeyboardKey> {
   @override
   Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context).keyTheme;
-
+    final controller = VirtualKeyboardScope.of(context);
     // ===== ICON KEY =====
     if (widget.type == KeyboardKeyType.icon) {
       return Padding(
         padding: theme.padding,
         child: GestureDetector(
-          onTap: () => widget.onTap?.call(""),
+          onTap: () => widget.onTap?.call("", controller),
           child: _buildIconButton(),
         ),
       );
@@ -180,7 +175,7 @@ class _KeyboardKeyState extends State<KeyboardKey> {
             clipBehavior: Clip.none,
             children: [
               GestureDetector(
-                onTap: () => widget.onTap?.call(char),
+                onTap: () => widget.onTap?.call(char, controller),
                 onLongPressStart: (_) {
                   if (widget.hasAdditional) {
                     setState(() {
@@ -206,7 +201,7 @@ class _KeyboardKeyState extends State<KeyboardKey> {
                 onLongPressEnd: (_) {
                   if (_isLongPressing) {
                     if (_selectedIndex != -1) {
-                      widget.onTap?.call(additional.elementAt(_selectedIndex));
+                      widget.onTap?.call(additional.elementAt(_selectedIndex), controller);
                     }
                     setState(() {
                       _isLongPressing = false;

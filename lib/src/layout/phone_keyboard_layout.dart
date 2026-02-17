@@ -48,18 +48,17 @@ class _PhoneKeyboardLayoutState extends State<PhoneKeyboardLayout> {
             children: row.map((key) {
               switch (key) {
                 case 'space':
-                  return KeyboardKey.buildSpaceKey(widget.controller, flex: 1);
+                  return KeyboardKey.buildSpaceKey(flex: 1);
                 case 'backspace':
-                  return KeyboardKey.buildBackspaceKey(widget.controller);
+                  return KeyboardKey.buildBackspaceKey();
                 case 'action':
-                  return KeyboardKey.buildActionKey(
-                      widget.controller, widget.options.action);
+                  return KeyboardKey.buildActionKey(widget.options.action);
                 case '0+':
                   return KeyboardKey.buildCharKey(
-                      KeyboardChar.symbol("0", ["+"]), widget.controller);
+                      KeyboardChar.symbol("0", ["+"]));
                 default:
                   return KeyboardKey.buildCharKey(
-                      KeyboardChar.symbol(key), widget.controller);
+                      KeyboardChar.symbol(key));
               }
             }).toList(),
           );

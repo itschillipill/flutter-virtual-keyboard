@@ -80,7 +80,7 @@ class _VirtualKeyboardScopeState extends State<VirtualKeyboardScope> {
               ),
               child: Listener(
                 behavior: HitTestBehavior.translucent,
-                onPointerUp: (event) {
+                onPointerDown: (event) {
                   if (_controller.activeFocus != null) {
                     final isOnKeyboard = _isPointerOnKeyboard(event.position) ||
                         _isPointerOnActiveField(
