@@ -51,20 +51,20 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
   }
 
   List<VirtualKeyboardOptions> getOptions() {
-    return const [
+    return [
       VirtualKeyboardOptions(
-        initialLanguage: KeyboardLanguage.ru,
-        additionalLanguages: [KeyboardLanguage.en],
+        initialLanguage: KeyboardLanguages.russian,
+        additionalLanguages: [KeyboardLanguages.english],
         type: VirtualKeyboardType.alphabetic,
         action: KeyboardAction.newLine,
       ),
       VirtualKeyboardOptions(
-        initialLanguage: KeyboardLanguage.en,
+        initialLanguage: KeyboardLanguages.english,
         type: VirtualKeyboardType.alphabetic,
         action: KeyboardAction.done,
       ),
       VirtualKeyboardOptions(
-        initialLanguage: KeyboardLanguage.ru,
+        initialLanguage: KeyboardLanguages.russian,
         type: VirtualKeyboardType.alphabetic,
         action: KeyboardAction.search,
       ),
@@ -77,7 +77,7 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
         action: KeyboardAction.done,
       ),
       VirtualKeyboardOptions(
-        initialLanguage: KeyboardLanguage.en,
+        initialLanguage: KeyboardLanguages.english,
         type: VirtualKeyboardType.email,
         action: KeyboardAction.done,
       )
