@@ -59,8 +59,7 @@ class _KeyboardTestPageState extends State<KeyboardTestPage> {
         action: KeyboardAction.newLine,
       ),
       VirtualKeyboardOptions(
-        initialLanguage: KeyboardLanguage.ru,
-        additionalLanguages: [KeyboardLanguage.en],
+        initialLanguage: KeyboardLanguage.en,
         type: VirtualKeyboardType.alphabetic,
         action: KeyboardAction.done,
       ),
