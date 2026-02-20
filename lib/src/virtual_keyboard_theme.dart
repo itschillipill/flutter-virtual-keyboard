@@ -38,7 +38,7 @@ class VirtualKeyboardThemeData {
       ),
       backgroundColor: Colors.grey.shade100,
       border: Border.all(color: Colors.grey.shade300, width: 1),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       padding: const EdgeInsets.all(8),
     );
   }
@@ -63,7 +63,7 @@ class VirtualKeyboardThemeData {
       ),
       backgroundColor: Colors.grey.shade900,
       border: Border.all(color: Colors.grey.shade800, width: 1),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       padding: const EdgeInsets.all(8),
     );
   }
@@ -88,7 +88,7 @@ class VirtualKeyboardThemeData {
       ),
       backgroundColor: colorScheme.surfaceContainerHighest,
       border: Border.all(color: colorScheme.outlineVariant, width: 1),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       padding: const EdgeInsets.all(8),
     );
   }

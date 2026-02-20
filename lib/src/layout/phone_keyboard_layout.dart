@@ -25,40 +25,24 @@ class _PhoneKeyboardLayoutState extends State<PhoneKeyboardLayout> {
   Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context);
 
-    final rows = [
-      ['1', '2', '3', '-'],
-      ['4', '5', '6', 'space'],
-      ['7', '8', '9', 'backspace'],
-      [
-        ',',
-        '0+',
-        '.',
-        'action',
-      ],
-    ];
-
     return Material(
       color: theme.backgroundColor,
       borderRadius: theme.borderRadius,
       elevation: 4,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: rows.map((row) {
+        children: phoneLayout.rows.map((row) {
           return KeyboardRow(
             children: row.map((key) {
-              switch (key) {
+              switch (key.lower) {
                 case 'space':
                   return KeyboardKey.buildSpaceKey(flex: 1);
                 case 'backspace':
                   return KeyboardKey.buildBackspaceKey();
                 case 'action':
                   return KeyboardKey.buildActionKey(widget.options.action);
-                case '0+':
-                  return KeyboardKey.buildCharKey(
-                      KeyboardChar.symbol("0", ["+"]));
                 default:
-                  return KeyboardKey.buildCharKey(
-                      KeyboardChar.symbol(key));
+                  return KeyboardKey.buildCharKey(key);
               }
             }).toList(),
           );

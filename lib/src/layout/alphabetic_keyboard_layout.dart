@@ -44,10 +44,10 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
 
   List<KeyboardLanguageConfig> _availableLanguages(
       VirtualKeyboardOptions options) {
-    return [
+    return {
       options.initialLanguage,
       ...options.additionalLanguages,
-    ];
+    }.toList();
   }
 
   void _toggleLanguage() {
@@ -69,7 +69,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
   Widget build(BuildContext context) {
     final theme = VirtualKeyboardTheme.of(context);
     final rows = _currentLanguage.rows;
-
+    final additionalLanguages = [...widget.options.additionalLanguages]..remove(widget.options.initialLanguage);
     return LayoutBuilder(
       builder: (context, constraints) {
         return Material(
@@ -118,7 +118,7 @@ class _AlphabeticKeyboardLayoutState extends State<AlphabeticKeyboardLayout> {
                   KeyboardKey.buildCharKey(KeyboardChar.symbol(".", [","])),
                   if (widget.options.type == VirtualKeyboardType.email)
                     KeyboardKey.buildCharKey(KeyboardChar.symbol('@')),
-                  if (widget.options.additionalLanguages.isNotEmpty)
+                  if (additionalLanguages.isNotEmpty)
                     KeyboardKey.buildIconKey(
                       icon: Icons.language,
                       onTap:_toggleLanguage,

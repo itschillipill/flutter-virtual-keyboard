@@ -50,6 +50,37 @@ KeyboardLanguageConfig numbers = KeyboardLanguageConfig(name: "Numbers", rows: [
   ]
 ]);
 
+
+KeyboardLanguageConfig phoneLayout = KeyboardLanguageConfig(
+  name: "Phone layout", 
+  rows: [
+    [
+    KeyboardChar.symbol('1'),
+    KeyboardChar.symbol('2'),
+    KeyboardChar.symbol('3'),
+    KeyboardChar.symbol("-")
+    ],
+    [
+    KeyboardChar.symbol('4'),
+    KeyboardChar.symbol('5'),
+    KeyboardChar.symbol('6'),
+    KeyboardChar.symbol('space')
+    ],
+    [
+    KeyboardChar.symbol('7'),
+    KeyboardChar.symbol('8'),
+    KeyboardChar.symbol('9'),
+    KeyboardChar.symbol('backspace')
+    ],
+    [
+    KeyboardChar.symbol(','),
+    KeyboardChar.symbol('0', ['+']),
+    KeyboardChar.symbol('.'),
+    KeyboardChar.symbol('action') 
+    ]
+]);
+
+
 KeyboardChar dot = KeyboardChar.symbol(".", [',']);
 
 class KeyboardLanguages {
